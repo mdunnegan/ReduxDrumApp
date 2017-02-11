@@ -18,33 +18,34 @@ class Editor extends Component {
 	renderRow(row, rowIdx) {
 		return (
 			<tr>
-				{row.map((r, colIdx) => <Note checked={this.props.noteRows[rowIdx][colIdx]} 
-																			row={rowIdx} column={colIdx} toggle={this.props.toggleNote} />)}
+				{row.map((r, colIdx) => <Note checked={this.props.editor.noteRows[rowIdx][colIdx]} 
+																			row={rowIdx} column={colIdx} 
+																			toggle={this.props.toggleNote} />)}
 			</tr>
 		);
 	}
 
-	play() {		
-		const measureLength = this.props.noteRows[0].length;
+	play() {
+		const measureLength = this.props.editor.noteRows[0].length;
 		this.setState({stop: this.playColumn(0, measureLength)});
 	}
 
 	playColumn(index, measureLength) {
 
-		if ( !this.props.loop && index == measureLength-1 ) {
+		if ( !this.props.editor.toggled && index == measureLength-1 ) {
 			return;
 		}
 
 		let that = this;
 		let timer = setTimeout(function() {
 
-			if (that.props.noteRows[0][index]){
+			if (that.props.editor.noteRows[0][index]){
 				that.state.hihat.play();
 			}
-			if (that.props.noteRows[1][index]){
+			if (that.props.editor.noteRows[1][index]){
 				that.state.snare.play();
 			}
-			if (that.props.noteRows[2][index]){
+			if (that.props.editor.noteRows[2][index]){
 				that.state.bass.play();
 			}
 
@@ -66,27 +67,27 @@ class Editor extends Component {
 			<div>
 				<table>
 					<tbody>
-						{this.props.noteRows.map(this.renderRow.bind(this))}
+						{this.props.editor.noteRows.map(this.renderRow.bind(this))}
 					</tbody>
 				</table>
 				<button className='btn btn-primary' onClick={this.play.bind(this)}>Play</button>
 				<button className='btn btn-primary' onClick={() => { if (this.state.stop) this.state.stop() }}>Stop</button>
-				<input type='checkbox' checked={this.props.loop} onChange={() => this.props.toggleLoop() } />
+				<input type='checkbox' checked={this.props.editor.toggled} onChange={() => this.props.toggleLoop()} />
+				<label>Loop</label>
 			</div>
 		);
 	}
 }
 
 function mapStateToProps(state) {
-	// available from reducers/index.js
+	// available from rootReducer in reducers/index.js
 	return { 
-		noteRows: state.noteRows,
-		loop: state.loop
+		editor: state.editor,
 	};
 }
 
 function mapDispatchToProps(dispatch) {
-	return bindActionCreators({ toggleLoop, toggleNote }, dispatch);
+	return bindActionCreators({ toggleNote, toggleLoop }, dispatch); // same behavior with and without toggleLoop
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Editor);

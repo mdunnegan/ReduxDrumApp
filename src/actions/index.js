@@ -11,5 +11,5 @@ export function toggleNote(row, column) {
 export function toggleLoop() {
 	return {
 		type: TOGGLE_LOOP
-	}
+	};
 }
