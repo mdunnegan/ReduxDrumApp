@@ -1,16 +1,14 @@
 import { TOGGLE_LOOP } from '../actions/index';
 
-const defaultState = false;
+const defaultState = true;
 
-export default function(state = defaultState, action) {
+export default function(loop = defaultState, action) {
 
 	switch(action.type){
 	case TOGGLE_LOOP:
-		return {
-			state: !state
-		};
+		return !loop
 
 	default:
-		return state;
+		return loop;
 	}
 }

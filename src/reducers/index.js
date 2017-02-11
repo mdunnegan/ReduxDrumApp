@@ -1,9 +1,9 @@
 import { combineReducers } from 'redux';
-import RowReducer from './reducer_notes';
+import NotesReducer from './reducer_notes';
 import EditorReducer from './reducer_editor';
 
 const rootReducer = combineReducers({
-  rows: RowReducer,
+  noteRows: NotesReducer,
   loop: EditorReducer
 });
 
