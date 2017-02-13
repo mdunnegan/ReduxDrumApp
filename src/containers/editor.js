@@ -32,7 +32,7 @@ class Editor extends Component {
 	}
 
 	play() {
-		const measureLength = this.props.editor.noteRows[0].length;
+		const measureLength = Object.keys(this.props.editor.noteRows[0]).length;
 		this.setState({stop: this.playColumn(0, measureLength)});
 	}
 
