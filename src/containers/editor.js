@@ -38,10 +38,6 @@ class Editor extends Component {
 
 	playColumn(index, measureLength) {
 
-		if ( !this.props.editor.toggled && index == measureLength-1 ) {
-			return;
-		}
-
 		let that = this;
 		let timer = setTimeout(function() {
 
@@ -53,6 +49,10 @@ class Editor extends Component {
 			}
 			if (that.props.editor.noteRows[2][index]){
 				that.state.bass.play();
+			}
+
+			if ( !that.props.editor.toggled && index == measureLength-1 ) {
+				return;
 			}
 
 			that.setState({stop: that.playColumn((index+1)%measureLength, measureLength)});
