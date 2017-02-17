@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { toggleLoop, toggleNote } from '../actions/editor';
+import { toggleLoop, toggleNote, updateBPM } from '../actions/editor';
 import Note from './note';
-import _ from 'lodash';
 
 class Editor extends Component {
 
@@ -56,7 +55,13 @@ class Editor extends Component {
 			}
 
 			that.setState({stop: that.playColumn((index+1)%measureLength, measureLength)});
-		}, 200);
+
+			// say we want 100 bpm...
+			// = 1.66667 beats per second    100/60
+			// = .6 seconds between notes    1/(100/60)
+			// = 600												 (1/(100/60))*1000
+			// Assume 16th notes: divide by 4
+		}, ((1/(this.props.editor.bpm/60))*1000/4));
 
 		return stop;
 
@@ -76,6 +81,11 @@ class Editor extends Component {
 						{this.renderNotes()}
 					</tbody>
 				</table>
+				<label>40</label>
+				<input type="range" min="40" max="180" onChange={(e) => this.props.updateBPM(this.props.index, e.target.value)} />
+				<label>180</label>
+				&nbsp;<strong>{this.props.editor.bpm}</strong>
+				<br/>
 				<button className='btn btn-primary' onClick={this.play.bind(this)}>Play</button>
 				<button className='btn btn-primary' onClick={() => { if (this.state.stop) this.state.stop() }}>Stop</button>
 				<input type='checkbox' checked={this.props.editor.toggled} onChange={() => this.props.toggleLoop(this.props.index)} />
@@ -86,7 +96,7 @@ class Editor extends Component {
 }
 
 function mapDispatchToProps(dispatch) {
-	return bindActionCreators({ toggleNote, toggleLoop }, dispatch);
+	return bindActionCreators({ toggleNote, toggleLoop, updateBPM }, dispatch);
 }
 
 export default connect(null, mapDispatchToProps)(Editor);
